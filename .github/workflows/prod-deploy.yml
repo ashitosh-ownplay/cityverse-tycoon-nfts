@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
 
 jobs:
   build:
@@ -17,26 +16,23 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: '16.20' 
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
 
       - name: Install dependencies
         run: yarn install
 
       - name: Create .env file
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "VITE_CHAIN_ID=${{ secrets.VITE_CHAIN_ID_PROD }}" >> .env
-          elif [ "${{ github.ref }}" == "refs/heads/dev" ]; then
-            echo "VITE_CHAIN_ID=${{ secrets.VITE_CHAIN_ID_DEV }}" >> .env
-          fi
+          echo "VITE_CHAIN_ID=${{ secrets.VITE_CHAIN_ID_PROD }}" >> .env
           echo "VITE_TW_CLIENT_ID=${{ secrets.VITE_TW_CLIENT_ID }}" >> .env
 
       - name: Build project
         run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            yarn run build --mode production
-          elif [ "${{ github.ref }}" == "refs/heads/dev" ]; then
-            yarn run build --mode development
-          fi
+          yarn run build --mode production
 
       - name: Upload production-ready build files
         uses: actions/upload-artifact@v3
@@ -48,17 +44,11 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
+    environment:
+      name: PROD
+      url: https://github.com/ashitosh-ownplay/cityverse-tycoon-nfts/smart-wallet-nfts
 
     steps:
-      - name: Set environment for deployment
-        run: |
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "ENVIRONMENT=PROD" >> $GITHUB_ENV
-          elif [ "${{ github.ref }}" == "refs/heads/dev" ]; then
-            echo "ENVIRONMENT=DEV" >> $GITHUB_ENV
-          fi
-
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
@@ -70,4 +60,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          publish_branch: ${{ github.ref == 'refs/heads/main' && 'gh-pages' || 'gh-pages-dev' }}
+          publish_branch: gh-pages
