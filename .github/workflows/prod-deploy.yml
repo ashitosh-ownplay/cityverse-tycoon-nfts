@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.20' 
+          node-version: "16.20"
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: PROD
-      url: https://github.com/ashitosh-ownplay/cityverse-tycoon-nfts/smart-wallet-nfts
+      url: https://ashitosh-ownplay.github.io/cityverse-tycoon-nfts/smart-wallet-nfts
 
     steps:
       - name: Download artifact

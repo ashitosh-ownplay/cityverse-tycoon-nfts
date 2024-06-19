@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: DEV
-      url: https://github.com/ashitosh-ownplay/cityverse-tycoon-nfts/dev-smart-wallet-nfts
+      url: https://ashitosh-ownplay.github.io/cityverse-tycoon-nfts/dev-smart-wallet-nfts
 
     steps:
       - name: Download artifact
